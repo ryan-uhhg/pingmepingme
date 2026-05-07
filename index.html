@@ -2,92 +2,618 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>프렌즈뽑기</title>
-<link rel="stylesheet" href="style.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
+html,body{height:100%;background:#1a1a2e;display:flex;justify-content:center;align-items:flex-start;font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;overflow:hidden;}
+#app{width:100%;max-width:430px;height:100dvh;height:100vh;display:flex;flex-direction:column;background:#fff;position:relative;}
+#hdr-title{font-size:20px;font-weight:900;padding:8px 14px 4px;color:#222;background:#fff;letter-spacing:-0.5px;}
+#hdr-bar{background:linear-gradient(180deg,#7b1c2e 0%,#5a1212 100%);display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:3px solid #3a0808;}
+#coin-badge{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#ffe066,#ffc107);border:2px solid #e08a00;border-radius:20px;padding:3px 10px 3px 7px;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+#coin-badge .ci{font-size:18px;}
+#coin-badge .cv{font-weight:900;font-size:15px;color:#7b1c2e;}
+#coin-badge .cl{font-size:10px;font-weight:800;color:#7b1c2e;background:rgba(255,255,255,0.5);border-radius:8px;padding:1px 5px;}
+.hdr-btn{background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,220,100,0.5);color:#fff;font-size:12px;font-weight:800;border-radius:14px;padding:5px 11px;cursor:pointer;white-space:nowrap;letter-spacing:-0.3px;}
+.hdr-btn:active{background:rgba(255,255,255,0.3);}
+#btn-names{margin-left:auto;}
+#cabinet-frame{flex:1;min-height:0;background:linear-gradient(180deg,#ffd23f 0%,#ffc107 100%);border:5px solid #e08a00;margin:0 6px;border-radius:16px 16px 0 0;border-bottom:none;padding:5px 5px 0;display:flex;flex-direction:column;box-shadow:inset 0 2px 0 rgba(255,255,255,0.4),0 -2px 8px rgba(0,0,0,0.2);position:relative;}
+#cabinet-frame::before{content:'';position:absolute;top:14px;left:10px;right:10px;height:6px;background:linear-gradient(180deg,#e53935,#b71c1c);border-radius:3px;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,0.3);}
+#glass{flex:1;min-height:0;background:linear-gradient(180deg,#dff6ff 0%,#b0dcf0 80%,#8ecce8 100%);border:3px solid #c21e1e;border-bottom:none;border-radius:10px 10px 0 0;overflow:hidden;position:relative;box-shadow:inset 0 0 30px rgba(0,80,120,0.1);}
+#glass::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,0.18) 0%,transparent 60%);pointer-events:none;z-index:5;}
+#gameCanvas{display:block;width:100%;height:100%;}
+#btn-menu{position:absolute;bottom:8px;right:8px;background:linear-gradient(135deg,#ffd23f,#ffc107);border:2px solid #e08a00;border-radius:50%;width:32px;height:32px;font-size:15px;cursor:pointer;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,0.25);}
+#controls{background:linear-gradient(180deg,#ffd23f 0%,#ffc107 100%);border:5px solid #e08a00;border-top:none;margin:0 6px;border-radius:0 0 16px 16px;padding:8px 12px 12px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,0.3);position:relative;}
+#controls::before{content:'';position:absolute;top:0;left:10px;right:10px;height:5px;background:linear-gradient(180deg,#e53935,#b71c1c);border-radius:0 0 3px 3px;}
+.cbtn{width:62px;height:62px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;border:5px solid #1a1a1a;position:relative;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,0.35),0 8px 16px rgba(0,0,0,0.25);transition:transform .08s,box-shadow .08s;flex-shrink:0;}
+.cbtn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,0.35);}
+.cbtn::before{content:'';position:absolute;top:4px;left:8px;width:60%;height:35%;border-radius:50%;background:rgba(255,255,255,0.35);}
+.cbtn-inner{width:48px;height:48px;border-radius:50%;background:inherit;border:3px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.4);font-weight:900;}
+.cbtn.blue{background:radial-gradient(circle at 35% 35%,#7de8f8,#3aa8f0);}
+.cbtn.green{background:radial-gradient(circle at 35% 35%,#7df882,#3cb544);}
+.cbtn.red{background:radial-gradient(circle at 35% 35%,#ff8066,#e53020);}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,0.65);display:flex;align-items:center;justify-content:center;z-index:100;backdrop-filter:blur(3px);}
+.modal.hidden{display:none;}
+.mbox{background:#fff;border-radius:20px;padding:22px 18px;width:92%;max-width:380px;max-height:82vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,0.4);}
+.mtitle{font-size:17px;font-weight:900;text-align:center;color:#5a1212;margin-bottom:14px;}
+.mclose,.msave{width:100%;padding:12px;border:none;border-radius:13px;font-size:14px;font-weight:800;cursor:pointer;margin-top:8px;font-family:inherit;}
+.mclose{background:#f0f0f0;color:#555;}
+.msave{background:linear-gradient(135deg,#7b1c2e,#5a1212);color:#fff;box-shadow:0 4px 12px rgba(90,18,18,0.35);}
+#col-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}
+.ci-card{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.ci-card img{width:58px;height:58px;object-fit:contain;border-radius:12px;background:#f4f4f4;padding:2px;}
+.ci-card img.locked{filter:grayscale(1) brightness(0.35);}
+.ci-name{font-size:9.5px;font-weight:800;color:#333;text-align:center;line-height:1.2;}
+.ci-cnt{font-size:9px;font-weight:900;color:#e53020;}
+.ci-none{font-size:9px;color:#bbb;}
+#name-list{display:flex;flex-direction:column;gap:8px;}
+.nrow{display:flex;align-items:center;gap:10px;background:#fafafa;border-radius:12px;padding:7px 10px;}
+.nrow img{width:42px;height:42px;object-fit:contain;}
+.nrow input{flex:1;border:1.5px solid #e0e0e0;border-radius:9px;padding:7px 10px;font-size:13px;font-family:inherit;}
+.nrow input:focus{outline:none;border-color:#7b1c2e;}
+.mfooter{display:flex;flex-direction:column;gap:0;}
+#ov-win,#ov-fail{position:fixed;inset:0;background:rgba(0,0,0,0.75);display:flex;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px);}
+#ov-win.hidden,#ov-fail.hidden{display:none;}
+.result-box{background:#fff;border-radius:24px;padding:28px 24px;text-align:center;min-width:230px;box-shadow:0 24px 64px rgba(0,0,0,0.5);}
+.result-box img{width:110px;height:110px;object-fit:contain;}
+.rname{font-size:22px;font-weight:900;color:#5a1212;margin:10px 0 4px;}
+.rmsg{font-size:14px;color:#777;margin-bottom:18px;}
+.rbtn{background:linear-gradient(135deg,#7b1c2e,#5a1212);color:#fff;border:none;border-radius:14px;padding:12px 36px;font-size:15px;font-weight:800;cursor:pointer;box-shadow:0 4px 14px rgba(90,18,18,0.35);font-family:inherit;}
+.fail-emoji{font-size:52px;margin-bottom:12px;}
+.fail-msg{font-size:18px;font-weight:900;color:#333;margin-bottom:18px;}
+#menu-panel{position:absolute;bottom:44px;right:10px;background:#fff;border-radius:14px;box-shadow:0 8px 30px rgba(0,0,0,0.2);padding:8px;display:flex;flex-direction:column;gap:6px;z-index:50;border:1.5px solid #eee;}
+#menu-panel.hidden{display:none;}
+#menu-panel button{background:#f8f8f8;border:none;border-radius:9px;padding:9px 16px;font-size:13px;cursor:pointer;font-weight:700;font-family:inherit;text-align:left;}
+#menu-panel button.danger{color:#c00;}
+</style>
 </head>
 <body>
 <div id="app">
-
-  <!-- 헤더 -->
-  <div id="header">
-    <div id="title">프렌즈뽑기</div>
-    <div id="header-bar">
-      <div id="coin-area">
-        <span id="coin-icon">🪙</span>
-        <span id="coin-count">∞</span>
-        <span id="coin-label">FREE</span>
-      </div>
-      <button id="btn-collection" onclick="openCollection()">컬렉션</button>
-      <button id="btn-edit-names" onclick="openNameEditor()">✏️ 이름편집</button>
+  <div id="hdr-title">프렌즈뽑기</div>
+  <div id="hdr-bar">
+    <div id="coin-badge">
+      <span class="ci">🪙</span>
+      <span class="cv">∞</span>
+      <span class="cl">FREE</span>
     </div>
+    <button class="hdr-btn" onclick="openCollection()">컬렉션</button>
+    <button class="hdr-btn" id="btn-names" onclick="openNames()">✏️ 이름편집</button>
   </div>
-
-  <!-- 캐비닛 -->
-  <div id="cabinet">
-    <div id="cabinet-inner">
+  <div id="cabinet-frame">
+    <div id="glass">
       <canvas id="gameCanvas"></canvas>
     </div>
     <button id="btn-menu" onclick="toggleMenu()">☰</button>
   </div>
-
-  <!-- 컨트롤 -->
   <div id="controls">
-    <button class="ctrl-btn blue"  id="btn-left"    onpointerdown="startMove('left')"  onpointerup="stopMove()" onpointerleave="stopMove()">◀</button>
-    <button class="ctrl-btn green" id="btn-forward"  onpointerdown="startMove('right')" onpointerup="stopMove()" onpointerleave="stopMove()">▶</button>
-    <div id="depth-slider-wrap">
-      <input type="range" id="depth-slider" min="0" max="100" value="50" oninput="setDepth(this.value)">
-    </div>
-    <button class="ctrl-btn red"   id="btn-drop"    onclick="dropClaw()">▼</button>
-  </div>
-
-</div>
-
-<!-- 컬렉션 모달 -->
-<div id="modal-collection" class="modal hidden">
-  <div class="modal-box">
-    <div class="modal-title">🎁 내 컬렉션</div>
-    <div id="collection-grid"></div>
-    <button class="modal-close" onclick="closeCollection()">닫기</button>
+    <button class="cbtn blue" onpointerdown="startMove('left')" onpointerup="stopMove()" onpointerleave="stopMove()">
+      <div class="cbtn-inner">&#9664;</div>
+    </button>
+    <button class="cbtn green" onpointerdown="startMove('right')" onpointerup="stopMove()" onpointerleave="stopMove()">
+      <div class="cbtn-inner">&#9654;</div>
+    </button>
+    <button class="cbtn red" onclick="dropClaw()">
+      <div class="cbtn-inner">&#9660;</div>
+    </button>
   </div>
 </div>
 
-<!-- 이름 편집 모달 -->
+<div id="modal-col" class="modal hidden">
+  <div class="mbox">
+    <div class="mtitle">🎁 내 컬렉션</div>
+    <div id="col-grid"></div>
+    <button class="mclose" onclick="closeCollection()">닫기</button>
+  </div>
+</div>
+
 <div id="modal-names" class="modal hidden">
-  <div class="modal-box">
-    <div class="modal-title">✏️ 친구 이름 편집</div>
-    <div id="name-editor-list"></div>
-    <div class="modal-footer">
-      <button class="btn-save" onclick="saveNames()">저장</button>
-      <button class="modal-close" onclick="closeNameEditor()">취소</button>
+  <div class="mbox">
+    <div class="mtitle">✏️ 친구 이름 편집</div>
+    <p style="font-size:12px;color:#999;text-align:center;margin-bottom:12px;">각 캐릭터에 친구 이름을 붙여보세요!</p>
+    <div id="name-list"></div>
+    <div class="mfooter">
+      <button class="msave" onclick="saveNames()">저장하기</button>
+      <button class="mclose" onclick="closeNames()">취소</button>
     </div>
   </div>
 </div>
 
-<!-- 성공 오버레이 -->
-<div id="overlay-win" class="hidden">
-  <div id="win-box">
-    <div id="win-char-img"></div>
-    <div id="win-char-name"></div>
-    <div id="win-msg">뽑았다! 🎉</div>
-    <button onclick="closeWin()">계속하기</button>
+<div id="ov-win" class="hidden">
+  <div class="result-box" id="win-box"></div>
+</div>
+
+<div id="ov-fail" class="hidden">
+  <div class="result-box">
+    <div class="fail-emoji">😢</div>
+    <div class="fail-msg">아쉽다...<br>다시 도전!</div>
+    <button class="rbtn" onclick="closeFail()">다시하기</button>
   </div>
 </div>
 
-<!-- 실패 오버레이 -->
-<div id="overlay-fail" class="hidden">
-  <div id="fail-box">
-    <div id="fail-msg">아쉽다... 다시 도전!</div>
-    <button onclick="closeFail()">다시하기</button>
-  </div>
-</div>
-
-<!-- 메뉴 패널 -->
 <div id="menu-panel" class="hidden">
-  <button onclick="resetCollection()">컬렉션 초기화</button>
+  <button class="danger" onclick="resetCollection()">🗑 컬렉션 초기화</button>
   <button onclick="toggleMenu()">닫기</button>
 </div>
 
-<script src="game.js"></script>
+<script>
+
+// ============================================
+//  프렌즈뽑기  -  물리 기반 인형뽑기 게임
+// ============================================
+
+const CHARS = [
+  {id:'warrior',      dn:'전사',     f:'hero_warrior.png'},
+  {id:'wizard',       dn:'마법사',    f:'hero_wizard.png'},
+  {id:'assassin',     dn:'자객',      f:'hero_assassin.png'},
+  {id:'druid',        dn:'드루이드',  f:'hero_druid.png'},
+  {id:'bard',         dn:'음유시인',  f:'hero_bard.png'},
+  {id:'barbarian',    dn:'광전사',    f:'hero_barbarian.png'},
+  {id:'cleric',       dn:'성직자',    f:'hero_cleric.png'},
+  {id:'dogkinhunter', dn:'사냥꾼',    f:'hero_dogkinhunter.png'},
+  {id:'gunner',       dn:'총잡이',    f:'hero_gunner.png'},
+  {id:'monk',         dn:'수도사',    f:'hero_monk.png'},
+  {id:'paladin',      dn:'성기사',    f:'hero_paladin.png'},
+  {id:'ranger',       dn:'레인저',    f:'hero_ranger.png'},
+  {id:'rogue',        dn:'도적',      f:'hero_rogue.png'},
+  {id:'warlock',      dn:'흑마법사',  f:'hero_warlock.png'},
+  {id:'warlord',      dn:'군주',      f:'hero_warlord.png'},
+  {id:'artificer',    dn:'발명가',    f:'hero_artificer.png'},
+];
+
+// ─── 상수 ───
+const GRAVITY    = 0.45;   // 픽셀/프레임^2
+const BOUNCE     = 0.18;   // 바닥 반발
+const FRICTION   = 0.82;   // 수평 마찰
+const DROP_SPD   = 7;      // 집게 하강 속도
+const RISE_SPD   = 6;      // 집게 상승 속도
+const DOLL_R_FRAC= 0.11;   // 인형 반지름 (캔버스 너비 비율)
+const RAIL_H     = 20;     // 레일 높이 (px)
+
+// ─── 전역 상태 ───
+let canvas, ctx, W, H, FLOOR_Y, DOLL_R;
+let chars = [];
+let dolls = [];          // {ch, x, y, vx, vy, ang, vang, r, settled, grabbed}
+let claw = {x:0.5, y:RAIL_H, vy:0, state:'idle', grabbed:null};
+let collection = {}, customNames = {};
+let moveTimer = null, dropLocked = false;
+let confetti = [];
+let imgsLoaded = false;
+
+// ─── 데이터 로드/저장 ───
+function loadData(){
+  try{const d=JSON.parse(localStorage.getItem('fg3')||'{}');
+    collection=d.c||{}; customNames=d.n||{};
+  }catch(e){collection={};customNames={};}
+}
+function saveData(){localStorage.setItem('fg3',JSON.stringify({c:collection,n:customNames}));}
+function getName(ch){return customNames[ch.id]||ch.dn;}
+
+// ─── 초기화 ───
+window.addEventListener('DOMContentLoaded',()=>{
+  loadData();
+  canvas = document.getElementById('gameCanvas');
+  ctx    = canvas.getContext('2d');
+  resize();
+  window.addEventListener('resize', resize);
+  loadImgs().then(()=>{ imgsLoaded=true; spawnDolls(); loop(); });
+});
+
+function resize(){
+  const g = document.getElementById('glass');
+  W = g.clientWidth  || 300;
+  H = g.clientHeight || Math.round(window.innerHeight * 0.58);
+  canvas.width  = W;
+  canvas.height = H;
+  FLOOR_Y = H - 10;
+  DOLL_R  = W * DOLL_R_FRAC;
+  if(imgsLoaded) spawnDolls();
+}
+
+function loadImgs(){
+  return new Promise(res=>{
+    let n=0;
+    chars = CHARS.map(c=>({...c, img:new Image()}));
+    chars.forEach(c=>{
+      c.img.onload = c.img.onerror = ()=>{ if(++n===chars.length) res(); };
+      c.img.src = `assets/characters/${c.f}`;
+    });
+  });
+}
+
+// ─── 인형 스폰 (물리 시뮬) ───
+function spawnDolls(){
+  dolls = [];
+  const count = chars.length; // 16마리
+  for(let i=0;i<count;i++){
+    const ch = chars[i];
+    const r  = DOLL_R * (0.82 + Math.random()*0.22);
+    // 랜덤 x, 캐비닛 상단 위에서 떨어뜨림
+    const x  = r + Math.random()*(W - r*2);
+    const y  = -r - i*DOLL_R*1.8;  // 순차적으로 위에서 떨어짐
+    dolls.push({
+      ch, x, y, r,
+      vx:(Math.random()-.5)*1.5,
+      vy:0,
+      ang: (Math.random()-.5)*0.4,
+      vang:(Math.random()-.5)*0.04,
+      settled:false,
+      grabbed:false,
+    });
+  }
+  claw.x = 0.5;
+  claw.y = RAIL_H;
+  claw.state = 'idle';
+  claw.grabbed = null;
+  dropLocked = false;
+}
+
+// ─── 물리 업데이트 ───
+function updateDolls(){
+  const walls_x_min = DOLL_R;
+  const walls_x_max = W - DOLL_R;
+
+  // 1) 각 인형에 중력 적용
+  for(let d of dolls){
+    if(d.grabbed) continue; // 집게에 잡힌 인형은 집게가 제어
+    d.vy += GRAVITY;
+    d.x  += d.vx;
+    d.y  += d.vy;
+    d.ang+= d.vang;
+
+    // 벽 충돌 (완전히 막아서 절대 넘어가지 않음)
+    if(d.x - d.r < 0)  { d.x = d.r;     d.vx =  Math.abs(d.vx)*0.4; }
+    if(d.x + d.r > W)  { d.x = W - d.r; d.vx = -Math.abs(d.vx)*0.4; }
+
+    // 바닥 충돌
+    if(d.y + d.r >= FLOOR_Y){
+      d.y  = FLOOR_Y - d.r;
+      d.vy = -d.vy * BOUNCE;
+      d.vx *= FRICTION;
+      d.vang *= 0.7;
+      if(Math.abs(d.vy)<0.5) d.vy=0;
+      if(Math.abs(d.vx)<0.15) d.vx=0;
+    }
+  }
+
+  // 2) 인형끼리 충돌 (circle-circle)
+  for(let i=0;i<dolls.length;i++){
+    for(let j=i+1;j<dolls.length;j++){
+      const a=dolls[i], b=dolls[j];
+      if(a.grabbed||b.grabbed) continue;
+      const dx=b.x-a.x, dy=b.y-a.y;
+      const dist=Math.sqrt(dx*dx+dy*dy);
+      const minD=a.r+b.r;
+      if(dist<minD && dist>0.01){
+        const overlap=(minD-dist)/2;
+        const nx=dx/dist, ny=dy/dist;
+        a.x -= nx*overlap; a.y -= ny*overlap;
+        b.x += nx*overlap; b.y += ny*overlap;
+        // 속도 교환
+        const relVx=b.vx-a.vx, relVy=b.vy-a.vy;
+        const dot=relVx*nx+relVy*ny;
+        if(dot<0){
+          a.vx += dot*nx*0.4; a.vy += dot*ny*0.4;
+          b.vx -= dot*nx*0.4; b.vy -= dot*ny*0.4;
+        }
+      }
+      // 충돌 후 벽 밖 클램핑
+      a.x = Math.max(a.r, Math.min(W-a.r, a.x));
+      b.x = Math.max(b.r, Math.min(W-b.r, b.x));
+    }
+  }
+}
+
+// ─── 집게 업데이트 ───
+function updateClaw(){
+  if(claw.state==='dropping'){
+    claw.y += DROP_SPD;
+    // 인형에 닿으면 멈춤
+    const cx = claw.x * W;
+    const clawTip = claw.y + 26; // 집게 프롱 끝 y
+    let hit = null;
+    for(let d of dolls){
+      if(d.grabbed) continue;
+      const dx = d.x - cx;
+      const dy = d.y - clawTip;
+      const dist = Math.sqrt(dx*dx+dy*dy);
+      if(dist < d.r + 14){
+        hit = d;
+        break;
+      }
+    }
+    // 최대 깊이 도달 or 인형에 닿음
+    const maxY = FLOOR_Y - DOLL_R * 0.5;
+    if(hit || claw.y >= maxY){
+      // 잡기 시도
+      const grabbed = tryGrab(cx, clawTip);
+      if(grabbed){
+        claw.state = 'grabbed';
+        claw.grabbed = grabbed;
+        grabbed.grabbed = true;
+      } else {
+        claw.state = 'rising';
+      }
+    }
+  } else if(claw.state==='rising' || claw.state==='grabbed'){
+    claw.y -= RISE_SPD;
+    if(claw.grabbed){
+      claw.grabbed.x = claw.x * W;
+      claw.grabbed.y = claw.y + 36;
+    }
+    if(claw.y <= RAIL_H){
+      claw.y = RAIL_H;
+      if(claw.state==='grabbed'){
+        showWin(claw.grabbed);
+      } else {
+        showFail();
+      }
+      claw.state = 'result';
+    }
+  }
+}
+
+function tryGrab(cx, tipY){
+  // 집게 근처 인형 중 가장 가까운 것
+  let best=null, bestDist=9999;
+  for(let d of dolls){
+    if(d.grabbed) continue;
+    const dx=d.x-cx, dy=d.y-tipY;
+    const dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist < d.r + 22 && dist < bestDist){
+      bestDist=dist; best=d;
+    }
+  }
+  if(!best) return null;
+  // 70% 확률로 성공
+  return Math.random() < 0.70 ? best : null;
+}
+
+// ─── 메인 루프 ───
+function loop(){
+  updateDolls();
+  updateClaw();
+  updateConfetti();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// ─── 그리기 ───
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // 바닥 영역 (어두운 파랑)
+  const grd = ctx.createLinearGradient(0,FLOOR_Y,0,H);
+  grd.addColorStop(0,'rgba(0,60,100,0.3)');
+  grd.addColorStop(1,'rgba(0,40,80,0.5)');
+  ctx.fillStyle = grd;
+  ctx.fillRect(0, FLOOR_Y, W, H-FLOOR_Y);
+
+  // 인형 (y 오름차순 = 뒤→앞)
+  const sorted = [...dolls].sort((a,b)=>a.y-b.y);
+  for(let d of sorted){
+    if(!d.grabbed) drawDoll(d);
+  }
+
+  // 집게 와이어
+  const cx = claw.x * W;
+  ctx.save();
+  ctx.strokeStyle = '#9aacbb';
+  ctx.lineWidth = 2.5;
+  ctx.setLineDash([6,4]);
+  ctx.beginPath();
+  ctx.moveTo(cx, RAIL_H);
+  ctx.lineTo(cx, claw.y - 10);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.restore();
+
+  // 잡힌 인형
+  if(claw.grabbed) drawDoll(claw.grabbed);
+
+  // 집게 헤드
+  drawClaw(cx, claw.y);
+
+  // 레일
+  ctx.fillStyle = '#e09000';
+  ctx.fillRect(0, 0, W, RAIL_H);
+  ctx.fillStyle = '#ffd23f';
+  ctx.beginPath();
+  ctx.roundRect(cx-18, 0, 36, RAIL_H+4, 5);
+  ctx.fill();
+  ctx.strokeStyle = '#c07800';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  // 콘페티
+  for(let p of confetti){
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life/60;
+    ctx.fillRect(p.x, p.y, p.w, p.h);
+    ctx.globalAlpha = 1;
+  }
+}
+
+function drawClaw(x, y){
+  const armL=26, sp=18;
+  ctx.strokeStyle='#f5a623'; ctx.lineWidth=7; ctx.lineCap='round';
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-sp,y+armL); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+sp,y+armL); ctx.stroke();
+  ctx.strokeStyle='#c07800'; ctx.lineWidth=2;
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x-sp,y+armL); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+sp,y+armL); ctx.stroke();
+  ctx.beginPath(); ctx.arc(x,y,10,0,Math.PI*2);
+  ctx.fillStyle='#ffe066'; ctx.fill();
+  ctx.strokeStyle='#e08a00'; ctx.lineWidth=2; ctx.stroke();
+  drawStar(x,y,5,8,4,'#fff200');
+}
+
+function drawStar(cx,cy,spikes,ro,ri,color){
+  ctx.save(); ctx.beginPath();
+  for(let i=0;i<spikes*2;i++){
+    const r=i%2===0?ro:ri;
+    const a=Math.PI/spikes*i-Math.PI/2;
+    i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+  }
+  ctx.closePath(); ctx.fillStyle=color; ctx.fill(); ctx.restore();
+}
+
+function drawDoll(d){
+  const sz = d.r * 2;
+  ctx.save();
+  ctx.translate(d.x, d.y);
+  ctx.rotate(d.ang);
+  // 그림자
+  ctx.fillStyle='rgba(0,0,0,0.13)';
+  ctx.beginPath();
+  ctx.ellipse(0, d.r*0.55, d.r*0.6, d.r*0.18, 0, 0, Math.PI*2);
+  ctx.fill();
+  // 이미지
+  if(d.ch.img && d.ch.img.complete && d.ch.img.naturalWidth>0){
+    ctx.drawImage(d.ch.img, -d.r, -d.r, sz, sz);
+  } else {
+    ctx.fillStyle='#f0c060';
+    ctx.beginPath(); ctx.arc(0,0,d.r,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#333'; ctx.font=`bold ${d.r*0.55}px sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText(d.ch.dn[0],0,0);
+  }
+  // 이름표
+  const n = getName(d.ch);
+  const fs = Math.max(9, d.r*0.28);
+  ctx.font = `bold ${fs}px "Apple SD Gothic Neo",sans-serif`;
+  const tw = ctx.measureText(n).width;
+  const bw=tw+12, bh=fs+6;
+  const ty = -d.r - bh - 2;
+  ctx.fillStyle='rgba(20,20,20,0.78)';
+  ctx.beginPath(); ctx.roundRect(-bw/2,ty,bw,bh,3); ctx.fill();
+  ctx.fillStyle='#fff'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(n,0,ty+bh/2);
+  ctx.restore();
+}
+
+// ─── 컨트롤 ───
+function startMove(dir){
+  stopMove();
+  if(claw.state!=='idle') return;
+  moveTimer = setInterval(()=>{
+    if(dir==='left')  claw.x = Math.max(0.04, claw.x-0.007);
+    if(dir==='right') claw.x = Math.min(0.96, claw.x+0.007);
+  }, 16);
+}
+function stopMove(){ if(moveTimer){clearInterval(moveTimer);moveTimer=null;} }
+function setDepth(v){ /* 슬라이더 미사용 — 집게가 인형에 닿으면 자동 정지 */ }
+function dropClaw(){
+  if(claw.state!=='idle' || dropLocked) return;
+  dropLocked = true;
+  claw.state = 'dropping';
+  claw.grabbed = null;
+}
+function resetIdle(){
+  claw.state='idle'; claw.y=RAIL_H;
+  if(claw.grabbed){ claw.grabbed.grabbed=false; }
+  claw.grabbed=null; dropLocked=false;
+}
+
+// ─── 콘페티 ───
+function updateConfetti(){
+  confetti = confetti.filter(p=>{
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.3; p.life--;
+    return p.life>0;
+  });
+}
+function spawnConfetti(){
+  const colors=['#ff595e','#ffca3a','#6a4c93','#1982c4','#8ac926','#ff924c'];
+  for(let i=0;i<70;i++){
+    confetti.push({
+      x:W/2+(Math.random()-.5)*80, y:H*0.4,
+      vx:(Math.random()-.5)*10, vy:-(Math.random()*10+4),
+      w:5+Math.random()*8, h:4+Math.random()*6,
+      color:colors[i%colors.length],
+      life:55+Math.random()*30,
+    });
+  }
+}
+
+// ─── WIN / FAIL ───
+function showWin(doll){
+  const ch = doll.ch;
+  collection[ch.id] = (collection[ch.id]||0)+1;
+  saveData();
+  document.getElementById('win-box').innerHTML=`
+    <img src="assets/characters/${ch.f}" alt="${getName(ch)}">
+    <div class="rname">${getName(ch)}</div>
+    <div class="rmsg">뽑았다! 🎉</div>
+    <button class="rbtn" onclick="closeWin()">계속하기</button>`;
+  document.getElementById('ov-win').classList.remove('hidden');
+  setTimeout(spawnConfetti,120);
+}
+function showFail(){
+  document.getElementById('ov-fail').classList.remove('hidden');
+}
+function closeWin(){
+  document.getElementById('ov-win').classList.add('hidden');
+  // 뽑힌 인형은 사라짐 — 새로 추가하지 않음
+  if(claw.grabbed){
+    dolls = dolls.filter(d=>d!==claw.grabbed);
+  }
+  resetIdle();
+}
+function closeFail(){
+  document.getElementById('ov-fail').classList.add('hidden');
+  resetIdle();
+}
+function addOneDoll(){
+  const ch = chars[Math.floor(Math.random()*chars.length)];
+  const r  = DOLL_R * (0.82+Math.random()*0.22);
+  dolls.push({
+    ch, x:r+Math.random()*(W-r*2), y:-r*2,
+    vx:(Math.random()-.5)*2, vy:0,
+    ang:(Math.random()-.5)*0.4,
+    vang:(Math.random()-.5)*0.04,
+    r, settled:false, grabbed:false,
+  });
+}
+
+// ─── 컬렉션 ───
+function openCollection(){
+  document.getElementById('col-grid').innerHTML=chars.map(ch=>{
+    const cnt=collection[ch.id]||0;
+    return `<div class="ci-card">
+      <img src="assets/characters/${ch.f}" class="${cnt?'':'locked'}" alt="${getName(ch)}">
+      <div class="ci-name">${getName(ch)}</div>
+      ${cnt?`<div class="ci-cnt">x${cnt}</div>`:'<div class="ci-none">미보유</div>'}
+    </div>`;
+  }).join('');
+  document.getElementById('modal-col').classList.remove('hidden');
+}
+function closeCollection(){document.getElementById('modal-col').classList.add('hidden');}
+
+// ─── 이름 편집 ───
+function openNames(){
+  document.getElementById('name-list').innerHTML=chars.map(ch=>`
+    <div class="nrow">
+      <img src="assets/characters/${ch.f}" alt="${ch.dn}">
+      <input id="ni-${ch.id}" type="text" value="${customNames[ch.id]||''}" placeholder="${ch.dn}" maxlength="8">
+    </div>`).join('');
+  document.getElementById('modal-names').classList.remove('hidden');
+}
+function saveNames(){
+  chars.forEach(ch=>{
+    const v=(document.getElementById(`ni-${ch.id}`)?.value||'').trim();
+    if(v) customNames[ch.id]=v; else delete customNames[ch.id];
+  });
+  saveData(); closeNames();
+}
+function closeNames(){document.getElementById('modal-names').classList.add('hidden');}
+
+// ─── 메뉴 ───
+function toggleMenu(){document.getElementById('menu-panel').classList.toggle('hidden');}
+function resetCollection(){
+  if(confirm('컬렉션을 초기화할까요?')){
+    collection={}; saveData(); spawnDolls(); toggleMenu();
+  }
+}
+
+</script>
 </body>
 </html>

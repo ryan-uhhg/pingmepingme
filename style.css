@@ -1,0 +1,279 @@
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  font-family: 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  overflow-x: hidden;
+}
+
+#app {
+  width: 100%;
+  max-width: 430px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+}
+
+/* ── 헤더 ── */
+#header { background: #fff; }
+
+#title {
+  font-size: 20px;
+  font-weight: 800;
+  padding: 10px 14px 4px;
+  color: #222;
+}
+
+#header-bar {
+  background: #7b1c2e;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+}
+
+#coin-area {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: rgba(0,0,0,0.25);
+  border-radius: 20px;
+  padding: 3px 10px;
+}
+#coin-icon { font-size: 16px; }
+#coin-count { color: #ffd700; font-weight: 800; font-size: 15px; }
+#coin-label { color: #ff9; font-size: 11px; font-weight: 700; }
+
+#btn-collection, #btn-edit-names {
+  background: rgba(255,255,255,0.18);
+  border: none;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 14px;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#btn-edit-names { margin-left: auto; }
+#btn-collection:active, #btn-edit-names:active { background: rgba(255,255,255,0.35); }
+
+/* ── 캐비닛 ── */
+#cabinet {
+  flex: 1;
+  position: relative;
+  background: #f5c518;
+  border: 6px solid #e5a800;
+  border-top: 10px solid #e5a800;
+  border-bottom: none;
+  margin: 0 6px;
+  border-radius: 14px 14px 0 0;
+}
+
+#cabinet-inner {
+  background: linear-gradient(180deg, #cce8ff 0%, #a0c8e8 100%);
+  border: 4px solid #d00;
+  border-bottom: none;
+  height: 100%;
+  border-radius: 10px 10px 0 0;
+  overflow: hidden;
+  position: relative;
+}
+
+#gameCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+#btn-menu {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #f5c518;
+  border: 2px solid #e5a800;
+  border-radius: 50%;
+  width: 34px; height: 34px;
+  font-size: 16px;
+  cursor: pointer;
+  z-index: 10;
+}
+
+/* ── 컨트롤 ── */
+#controls {
+  background: #f5c518;
+  border: 4px solid #e5a800;
+  border-top: none;
+  margin: 0 6px;
+  border-radius: 0 0 14px 14px;
+  padding: 10px 8px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ctrl-btn {
+  width: 64px; height: 64px;
+  border-radius: 50%;
+  border: 4px solid rgba(0,0,0,0.15);
+  font-size: 22px;
+  font-weight: 900;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.25);
+  transition: transform 0.08s, box-shadow 0.08s;
+  user-select: none;
+}
+.ctrl-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 rgba(0,0,0,0.25); }
+.ctrl-btn.blue   { background: #3aa8f0; }
+.ctrl-btn.green  { background: #4caf50; }
+.ctrl-btn.red    { background: #f04b3a; }
+
+#depth-slider-wrap {
+  display: flex;
+  align-items: center;
+  height: 64px;
+}
+#depth-slider {
+  -webkit-appearance: slider-vertical;
+  writing-mode: vertical-lr;
+  width: 28px;
+  height: 54px;
+  cursor: pointer;
+}
+
+/* ── 모달 ── */
+.modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 100;
+}
+.modal.hidden { display: none; }
+
+.modal-box {
+  background: #fff;
+  border-radius: 18px;
+  padding: 20px;
+  width: 90%;
+  max-width: 380px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 800;
+  margin-bottom: 14px;
+  text-align: center;
+  color: #7b1c2e;
+}
+
+#collection-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.col-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.col-item img {
+  width: 60px; height: 60px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #f0f0f0;
+  transition: filter 0.2s;
+}
+.col-item img.locked { filter: grayscale(1) brightness(0.4); }
+.col-item .col-name { font-size: 10px; font-weight: 700; color: #444; text-align: center; }
+.col-item .col-count { font-size: 10px; color: #f04b3a; font-weight: 800; }
+
+.modal-close, .btn-save {
+  margin-top: 14px;
+  width: 100%;
+  padding: 11px;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.modal-close { background: #eee; color: #444; }
+.btn-save { background: #7b1c2e; color: #fff; margin-bottom: 6px; }
+.modal-footer { display: flex; flex-direction: column; }
+
+/* 이름 에디터 */
+#name-editor-list { display: flex; flex-direction: column; gap: 8px; }
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f8f8f8;
+  border-radius: 10px;
+  padding: 6px 10px;
+}
+.name-row img { width: 40px; height: 40px; object-fit: contain; }
+.name-row input {
+  flex: 1;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 14px;
+  font-family: inherit;
+}
+.name-row input:focus { outline: none; border-color: #7b1c2e; }
+
+/* ── 오버레이 ── */
+#overlay-win, #overlay-fail {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 200;
+}
+#overlay-win.hidden, #overlay-fail.hidden { display: none; }
+
+#win-box, #fail-box {
+  background: #fff;
+  border-radius: 22px;
+  padding: 28px 24px;
+  text-align: center;
+  min-width: 220px;
+}
+#win-box img { width: 110px; height: 110px; object-fit: contain; }
+#win-char-name { font-size: 20px; font-weight: 900; color: #7b1c2e; margin: 8px 0 4px; }
+#win-msg { font-size: 15px; color: #555; margin-bottom: 16px; }
+#fail-msg { font-size: 18px; font-weight: 800; color: #333; margin-bottom: 16px; }
+#win-box button, #fail-box button {
+  background: #7b1c2e; color: #fff;
+  border: none; border-radius: 14px;
+  padding: 11px 32px;
+  font-size: 15px; font-weight: 800;
+  cursor: pointer;
+}
+
+/* 메뉴 패널 */
+#menu-panel {
+  position: absolute;
+  top: 48px; right: 8px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+  padding: 8px;
+  display: flex; flex-direction: column; gap: 6px;
+  z-index: 50;
+}
+#menu-panel.hidden { display: none; }
+#menu-panel button {
+  background: #f5f5f5; border: none; border-radius: 8px;
+  padding: 8px 16px; font-size: 13px; cursor: pointer; font-weight: 700;
+}
+#menu-panel button:first-child { color: #c00; }

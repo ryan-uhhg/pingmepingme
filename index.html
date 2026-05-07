@@ -7,9 +7,9 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation;}
 html,body{height:100%;background:#1a1a2e;display:flex;justify-content:center;align-items:flex-start;font-family:"Apple SD Gothic Neo","Noto Sans KR",sans-serif;overflow:hidden;}
-#app{width:100%;max-width:430px;height:100dvh;height:100vh;display:flex;flex-direction:column;background:#fff;position:relative;}
-#hdr-title{font-size:20px;font-weight:900;padding:8px 14px 4px;color:#222;background:#fff;letter-spacing:-0.5px;}
-#hdr-bar{background:linear-gradient(180deg,#7b1c2e 0%,#5a1212 100%);display:flex;align-items:center;gap:8px;padding:6px 10px;border-bottom:3px solid #3a0808;}
+#app{width:100%;max-width:430px;height:100dvh;height:100vh;display:flex;flex-direction:column;background:#fff;position:relative;overflow:hidden;}
+#hdr-title{font-size:18px;font-weight:900;padding:5px 14px 3px;color:#222;background:#fff;letter-spacing:-0.5px;}
+#hdr-bar{background:linear-gradient(180deg,#7b1c2e 0%,#5a1212 100%);display:flex;align-items:center;gap:8px;padding:4px 10px;border-bottom:3px solid #3a0808;flex-shrink:0;}
 #coin-badge{display:flex;align-items:center;gap:5px;background:linear-gradient(135deg,#ffe066,#ffc107);border:2px solid #e08a00;border-radius:20px;padding:3px 10px 3px 7px;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
 #coin-badge .ci{font-size:18px;}
 #coin-badge .cv{font-weight:900;font-size:15px;color:#7b1c2e;}
@@ -17,18 +17,18 @@ html,body{height:100%;background:#1a1a2e;display:flex;justify-content:center;ali
 .hdr-btn{background:rgba(255,255,255,0.15);border:1.5px solid rgba(255,220,100,0.5);color:#fff;font-size:12px;font-weight:800;border-radius:14px;padding:5px 11px;cursor:pointer;white-space:nowrap;letter-spacing:-0.3px;}
 .hdr-btn:active{background:rgba(255,255,255,0.3);}
 #btn-names{margin-left:auto;}
-#cabinet-frame{flex:1;min-height:0;background:linear-gradient(180deg,#ffd23f 0%,#ffc107 100%);border:5px solid #e08a00;margin:0 6px;border-radius:16px 16px 0 0;border-bottom:none;padding:5px 5px 0;display:flex;flex-direction:column;box-shadow:inset 0 2px 0 rgba(255,255,255,0.4),0 -2px 8px rgba(0,0,0,0.2);position:relative;}
+#cabinet-frame{flex:1;min-height:0;background:linear-gradient(180deg,#ffd23f 0%,#ffc107 100%);border:5px solid #e08a00;margin:0 6px;border-radius:16px 16px 0 0;border-bottom:none;padding:5px 5px 0;display:flex;flex-direction:column;box-shadow:inset 0 2px 0 rgba(255,255,255,0.4),0 -2px 8px rgba(0,0,0,0.2);position:relative;overflow:hidden;}
 #cabinet-frame::before{content:'';position:absolute;top:14px;left:10px;right:10px;height:6px;background:linear-gradient(180deg,#e53935,#b71c1c);border-radius:3px;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,0.3);}
 #glass{flex:1;min-height:0;background:linear-gradient(180deg,#dff6ff 0%,#b0dcf0 80%,#8ecce8 100%);border:3px solid #c21e1e;border-bottom:none;border-radius:10px 10px 0 0;overflow:hidden;position:relative;box-shadow:inset 0 0 30px rgba(0,80,120,0.1);}
 #glass::after{content:'';position:absolute;inset:0;background:linear-gradient(105deg,rgba(255,255,255,0.18) 0%,transparent 60%);pointer-events:none;z-index:5;}
 #gameCanvas{display:block;width:100%;height:100%;}
 #btn-menu{position:absolute;bottom:8px;right:8px;background:linear-gradient(135deg,#ffd23f,#ffc107);border:2px solid #e08a00;border-radius:50%;width:32px;height:32px;font-size:15px;cursor:pointer;z-index:10;box-shadow:0 2px 6px rgba(0,0,0,0.25);}
-#controls{background:linear-gradient(180deg,#ffd23f 0%,#ffc107 100%);border:5px solid #e08a00;border-top:none;margin:0 6px;border-radius:0 0 16px 16px;padding:8px 12px 12px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,0.3);position:relative;}
+#controls{background:linear-gradient(180deg,#ffd23f 0%,#ffc107 100%);border:5px solid #e08a00;border-top:none;margin:0 6px;border-radius:0 0 16px 16px;padding:6px 12px 10px;display:flex;align-items:center;justify-content:center;gap:10px;box-shadow:0 4px 12px rgba(0,0,0,0.3);position:relative;flex-shrink:0;}
 #controls::before{content:'';position:absolute;top:0;left:10px;right:10px;height:5px;background:linear-gradient(180deg,#e53935,#b71c1c);border-radius:0 0 3px 3px;}
-.cbtn{width:62px;height:62px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;border:5px solid #1a1a1a;position:relative;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,0.35),0 8px 16px rgba(0,0,0,0.25);transition:transform .08s,box-shadow .08s;flex-shrink:0;}
+.cbtn{width:58px;height:58px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;border:5px solid #1a1a1a;position:relative;overflow:hidden;box-shadow:0 6px 0 rgba(0,0,0,0.35),0 8px 16px rgba(0,0,0,0.25);transition:transform .08s,box-shadow .08s;flex-shrink:0;}
 .cbtn:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,0.35);}
 .cbtn::before{content:'';position:absolute;top:4px;left:8px;width:60%;height:35%;border-radius:50%;background:rgba(255,255,255,0.35);}
-.cbtn-inner{width:48px;height:48px;border-radius:50%;background:inherit;border:3px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.4);font-weight:900;}
+.cbtn-inner{width:44px;height:44px;border-radius:50%;background:inherit;border:3px solid rgba(255,255,255,0.9);display:flex;align-items:center;justify-content:center;font-size:18px;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.4);font-weight:900;}
 .cbtn.blue{background:radial-gradient(circle at 35% 35%,#7de8f8,#3aa8f0);}
 .cbtn.green{background:radial-gradient(circle at 35% 35%,#7df882,#3cb544);}
 .cbtn.red{background:radial-gradient(circle at 35% 35%,#ff8066,#e53020);}
@@ -142,22 +142,22 @@ html,body{height:100%;background:#1a1a2e;display:flex;justify-content:center;ali
 // ============================================
 
 const CHARS = [
-  {id:'warrior',      dn:'전사',     f:'hero_warrior.png'},
-  {id:'wizard',       dn:'마법사',    f:'hero_wizard.png'},
-  {id:'assassin',     dn:'자객',      f:'hero_assassin.png'},
-  {id:'druid',        dn:'드루이드',  f:'hero_druid.png'},
-  {id:'bard',         dn:'음유시인',  f:'hero_bard.png'},
-  {id:'barbarian',    dn:'광전사',    f:'hero_barbarian.png'},
-  {id:'cleric',       dn:'성직자',    f:'hero_cleric.png'},
-  {id:'dogkinhunter', dn:'사냥꾼',    f:'hero_dogkinhunter.png'},
-  {id:'gunner',       dn:'총잡이',    f:'hero_gunner.png'},
-  {id:'monk',         dn:'수도사',    f:'hero_monk.png'},
-  {id:'paladin',      dn:'성기사',    f:'hero_paladin.png'},
-  {id:'ranger',       dn:'레인저',    f:'hero_ranger.png'},
-  {id:'rogue',        dn:'도적',      f:'hero_rogue.png'},
-  {id:'warlock',      dn:'흑마법사',  f:'hero_warlock.png'},
-  {id:'warlord',      dn:'군주',      f:'hero_warlord.png'},
-  {id:'artificer',    dn:'발명가',    f:'hero_artificer.png'},
+  {id:'warrior',      dn:'남신',      f:'hero_warrior.png'},
+  {id:'wizard',       dn:'남종용',    f:'hero_wizard.png'},
+  {id:'assassin',     dn:'권보경',    f:'hero_assassin.png'},
+  {id:'druid',        dn:'한재선',    f:'hero_druid.png'},
+  {id:'bard',         dn:'박근량',    f:'hero_bard.png'},
+  {id:'barbarian',    dn:'정재훈',    f:'hero_barbarian.png'},
+  {id:'cleric',       dn:'한지윤',    f:'hero_cleric.png'},
+  {id:'dogkinhunter', dn:'설유림',    f:'hero_dogkinhunter.png'},
+  {id:'gunner',       dn:'이지인',    f:'hero_gunner.png'},
+  {id:'monk',         dn:'성시훈',    f:'hero_monk.png'},
+  {id:'paladin',      dn:'박동국',    f:'hero_paladin.png'},
+  {id:'ranger',       dn:'박인성',    f:'hero_ranger.png'},
+  {id:'rogue',        dn:'정영진',    f:'hero_rogue.png'},
+  {id:'warlock',      dn:'남승연',    f:'hero_warlock.png'},
+  {id:'warlord',      dn:'김성복',    f:'hero_warlord.png'},
+  {id:'artificer',    dn:'김창섭',    f:'hero_artificer.png'},
 ];
 
 // ─── 상수 ───
